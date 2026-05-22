@@ -1,4 +1,6 @@
 import { TypeIcon } from './TypeIcon'
+import { TypeSection } from './TypeSection'
+import { TypeBadgeList } from './TypeBadgeList'
 import './TypeDetail.css'
 import typeData from '../data/typeData.json'
 import pokemonTypes from '../data/pokemonTypes.json'
@@ -7,14 +9,20 @@ interface TypeDetailProps {
   type: string
   color: string
   onBack: () => void
+  onTypeClick?: (type: string, color: string) => void
 }
 
-export function TypeDetail({ type, color, onBack }: TypeDetailProps) {
+export function TypeDetail({ type, color, onBack, onTypeClick }: TypeDetailProps) {
   const data = typeData[type as keyof typeof typeData]
   
   const getTypeColor = (typeName: string) => {
     const typeInfo = pokemonTypes.find(t => t.name === typeName)
     return typeInfo?.color || '#888888'
+  }
+
+  const handleTypeClick = (clickedType: string) => {
+    const clickedColor = getTypeColor(clickedType)
+    onTypeClick?.(clickedType, clickedColor)
   }
 
   return (
@@ -30,125 +38,73 @@ export function TypeDetail({ type, color, onBack }: TypeDetailProps) {
       </div>
 
       <div className="type-sections">
-        <div className="type-section">
-          <h2>Effective</h2>
-          <p className="section-description">Deals 2x damage to:</p>
-          <div className="type-badges">
-            {data.strongAgainst.length > 0 ? (
-              data.strongAgainst.map((targetType) => (
-                <div
-                  key={targetType}
-                  className="type-badge"
-                  style={{ backgroundColor: getTypeColor(targetType) }}
-                >
-                  <TypeIcon type={targetType} size={40} />
-                  <span>{targetType}</span>
-                </div>
-              ))
-            ) : (
-              <p className="no-types">No super effective types</p>
-            )}
-          </div>
-        </div>
+        <TypeSection
+          title="Effective"
+          description="Deals 2x damage to:"
+          types={data.strongAgainst}
+          getTypeColor={getTypeColor}
+          emptyMessage="No super effective types"
+          onTypeClick={handleTypeClick}
+        />
 
-        <div className="type-section">
-          <h2>Not Effective</h2>
-          <p className="section-description">Deals 0.5x damage to:</p>
-          <div className="type-badges">
-            {data.weakAgainst.length > 0 ? (
-              data.weakAgainst.map((targetType) => (
-                <div
-                  key={targetType}
-                  className="type-badge"
-                  style={{ backgroundColor: getTypeColor(targetType) }}
-                >
-                  <TypeIcon type={targetType} size={40} />
-                  <span>{targetType}</span>
-                </div>
-              ))
-            ) : (
-              <p className="no-types">No not very effective types</p>
-            )}
-          </div>
+        <TypeSection
+          title="Not Effective"
+          description="Deals 0.5x damage to:"
+          types={data.weakAgainst}
+          getTypeColor={getTypeColor}
+          emptyMessage="No not very effective types"
+          onTypeClick={handleTypeClick}
+          additionalContent={
+            data.noEffect.length > 0 && (
+              <>
+                <p className="section-description" style={{ marginTop: '1.5rem' }}>
+                  Deals 0x damage to (No Effect):
+                </p>
+                <TypeBadgeList
+                  types={data.noEffect}
+                  getTypeColor={getTypeColor}
+                  emptyMessage=""
+                  isNoEffect={true}
+                  onTypeClick={handleTypeClick}
+                />
+              </>
+            )
+          }
+        />
 
-          {data.noEffect.length > 0 && (
-            <>
-              <p className="section-description" style={{ marginTop: '1.5rem' }}>Deals 0x damage to (No Effect):</p>
-              <div className="type-badges">
-                {data.noEffect.map((targetType) => (
-                  <div
-                    key={targetType}
-                    className="type-badge no-effect-badge"
-                    style={{ backgroundColor: getTypeColor(targetType) }}
-                  >
-                    <TypeIcon type={targetType} size={40} />
-                    <span>{targetType}</span>
-                  </div>
-                ))}
-              </div>
-            </>
-          )}
-        </div>
+        <TypeSection
+          title="Weak To"
+          description="Takes 2x damage from:"
+          types={data.weaknesses}
+          getTypeColor={getTypeColor}
+          emptyMessage="No weaknesses"
+          onTypeClick={handleTypeClick}
+        />
 
-        <div className="type-section">
-          <h2>Weak To</h2>
-          <p className="section-description">Takes 2x damage from:</p>
-          <div className="type-badges">
-            {data.weaknesses.length > 0 ? (
-              data.weaknesses.map((attackType) => (
-                <div
-                  key={attackType}
-                  className="type-badge"
-                  style={{ backgroundColor: getTypeColor(attackType) }}
-                >
-                  <TypeIcon type={attackType} size={40} />
-                  <span>{attackType}</span>
-                </div>
-              ))
-            ) : (
-              <p className="no-types">No weaknesses</p>
-            )}
-          </div>
-        </div>
-
-        <div className="type-section">
-          <h2>Resistant To</h2>
-          <p className="section-description">Takes 0.5x damage from:</p>
-          <div className="type-badges">
-            {data.resistances.length > 0 ? (
-              data.resistances.map((attackType) => (
-                <div
-                  key={attackType}
-                  className="type-badge"
-                  style={{ backgroundColor: getTypeColor(attackType) }}
-                >
-                  <TypeIcon type={attackType} size={40} />
-                  <span>{attackType}</span>
-                </div>
-              ))
-            ) : (
-              <p className="no-types">No resistances</p>
-            )}
-          </div>
-
-          {data.immunities.length > 0 && (
-            <>
-              <p className="section-description" style={{ marginTop: '1.5rem' }}>Takes 0x damage from (Immune):</p>
-              <div className="type-badges">
-                {data.immunities.map((attackType) => (
-                  <div
-                    key={attackType}
-                    className="type-badge no-effect-badge"
-                    style={{ backgroundColor: getTypeColor(attackType) }}
-                  >
-                    <TypeIcon type={attackType} size={40} />
-                    <span>{attackType}</span>
-                  </div>
-                ))}
-              </div>
-            </>
-          )}
-        </div>
+        <TypeSection
+          title="Resistant To"
+          description="Takes 0.5x damage from:"
+          types={data.resistances}
+          getTypeColor={getTypeColor}
+          emptyMessage="No resistances"
+          onTypeClick={handleTypeClick}
+          additionalContent={
+            data.immunities.length > 0 && (
+              <>
+                <p className="section-description" style={{ marginTop: '1.5rem' }}>
+                  Takes 0x damage from (Immune):
+                </p>
+                <TypeBadgeList
+                  types={data.immunities}
+                  getTypeColor={getTypeColor}
+                  emptyMessage=""
+                  isNoEffect={true}
+                  onTypeClick={handleTypeClick}
+                />
+              </>
+            )
+          }
+        />
       </div>
     </div>
   )

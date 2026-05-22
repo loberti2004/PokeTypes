@@ -13,6 +13,7 @@ function App() {
         type={selectedType.name} 
         color={selectedType.color}
         onBack={() => setSelectedType(null)}
+        onTypeClick={(typeName, typeColor) => setSelectedType({ name: typeName, color: typeColor })}
       />
     )
   }
