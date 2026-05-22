@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="topGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff1a1a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#cc0000;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="bottomGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e6e6e6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Outer circle shadow -->
+  <circle cx="50" cy="50" r="48" fill="#1a1a1a" opacity="0.2"/>
+  
+  <!-- Top half (Red) -->
+  <path d="M 50 2 A 48 48 0 0 1 98 50 L 2 50 A 48 48 0 0 1 50 2 Z" fill="url(#topGradient)"/>
+  
+  <!-- Bottom half (White) -->
+  <path d="M 2 50 L 98 50 A 48 48 0 0 1 50 98 A 48 48 0 0 1 2 50 Z" fill="url(#bottomGradient)"/>
+  
+  <!-- Middle black band -->
+  <rect x="2" y="45" width="96" height="10" fill="#1a1a1a"/>
+  
+  <!-- Center button outer circle -->
+  <circle cx="50" cy="50" r="18" fill="#1a1a1a"/>
+  
+  <!-- Center button middle circle -->
+  <circle cx="50" cy="50" r="15" fill="#ffffff"/>
+  
+  <!-- Center button inner circle -->
+  <circle cx="50" cy="50" r="8" fill="#e6e6e6"/>
+  
+  <!-- Highlight on center button -->
+  <circle cx="47" cy="47" r="3" fill="#ffffff" opacity="0.8"/>
+  
+  <!-- Top highlight -->
+  <path d="M 30 15 Q 50 10 70 15 Q 50 20 30 15 Z" fill="#ffffff" opacity="0.3"/>
+</svg>
